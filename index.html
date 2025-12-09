@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- コンテンツ表示画面 -->
+    <div class="screen" id="screen"></div>
+
+    <div class="input-area">
+        <input type="text" id="uname" placeholder="名前" />
+        <input type="text" id="text" placeholder="メッセージを入力" />
+        <button id="send">送信</button>
+    </div>
+    <!-- コンテンツ表示画面 -->
+
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- JQuery -->
+
+    <!--** 以下Firebase **-->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+        from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAC_tZ6ARcH5SXb-1W8Ne97cH7s-nedjg",
+            authDomain: "chatapp-b51db.firebaseapp.com",
+            databaseURL: "https://chatapp-b51db-default-rtdb.firebaseio.com",
+            projectId: "chatapp-b51db",
+            storageBucket: "chatapp-b51db.firebasestorage.app",
+            messagingSenderId: "523990207294",
+            appId: "1:523990207294:web:28d4605cc05825fc01fa6f"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const dbRef = ref(db, "chatapp");
+
+        // メッセージ送信
+    function sendMessage() {
+      const uname = $("#uname").val().trim() || "名無しさん";
+      const text = $("#text").val().trim();
+      if (!text) return;
+
+      const msg = {
+        uname: uname,
+        text: text,
+        time: Date.now()
+      };
+
+      const newPostRef = push(dbRef);
+      set(newPostRef, msg);
+
+      $("#text").val("");
+    }
+
+    // 送信ボタン
+    $("#send").on("click", sendMessage);
+
+    // Enterで送信
+    $("#text").on("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // 弾幕表示
+    function showDanmaku(msg) {
+      const screen = $("#screen");
+      const dan = $("<div>").addClass("danmaku");
+
+      dan.text(`${msg.uname}：${msg.text}`);
+
+      // ランダム縦位置
+      const screenHeight = screen.height();
+      const y = Math.random() * (screenHeight - 40);
+      const isLeftToRight = Math.random() > 0.5;
+
+      dan.css({
+        top: y + "px",
+        left: isLeftToRight ? "-200px" : "100vw"
+      });
+
+      screen.append(dan);
+
+      // アニメーション（6〜9秒）
+      const duration = 6000 + Math.random() * 3000;
+
+      dan.animate(
+        {
+          left: isLeftToRight ? "100vw" : "-300px"
+        },
+        duration,
+        "linear",
+        () => dan.remove()
+      );
+    }
+
+    // 新着メッセージを受信して弾幕表示
+    onChildAdded(dbRef, function (data) {
+      const msg = data.val();
+      showDanmaku(msg);
+    });
+
+  </script>
+</body>
+
+</html>

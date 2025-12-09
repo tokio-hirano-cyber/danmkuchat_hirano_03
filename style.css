@@ -1,0 +1,78 @@
+<style>
+
+body {
+    margin: 0;
+    background: #000;
+    overflow: hidden;
+    /* 画面外に流れてもスクロールしない */
+    font-family: Arial, sans-serif;
+    color: #fff;
+}
+
+/* 画面全体 */
+.screen {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+}
+
+/* 流れてくる弾幕テキスト */
+.danmaku {
+    position: absolute;
+    white-space: nowrap;
+    font-size: 80px;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 0 6px #000;
+    pointer-events: none;
+}
+
+/* 下部の入力エリア */
+.input-area {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    gap: 6px;
+}
+
+#uname {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    outline: none;
+    width: 120px;
+}
+
+#text {
+    padding: 8px 12px;
+    border-radius: 99px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    outline: none;
+    flex: 0.96;
+}
+
+#send {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: none;
+    background: #ff0050;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#send:active {
+    transform: scale(0.95);
+}
+
+</style>
